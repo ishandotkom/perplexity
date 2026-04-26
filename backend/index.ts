@@ -10,6 +10,27 @@ app.use(express.json());
 
 const client = tavily({ apiKey: process.env.TAVILY_API_KEY });
 
+//Signup
+app.post('/signup', async(req, res) =>{
+
+})
+
+//Signin
+app.post('/signin', async(req, res) =>{
+  
+})
+
+//Past conversation get
+app.post('/conversations', async(req, res)=>{
+
+})
+
+//Past conversation get
+app.post('/conversation/:conversationId', async(req, res)=>{
+
+})
+
+//Ask
 app.post("/perplexity_ask", async (req, res) => {
   //step-1 - get the query from the user
   const query = req.body.query;
@@ -51,14 +72,23 @@ app.post("/perplexity_ask", async (req, res) => {
       res.write(chunk.text);
     }
   }
-  res.write("\n------------SOURCES------------\n");
-  //step-7 - also stream back the resources and the follow up questions(which we)
-  //we can get from another llm call
-  webSearchResult.forEach((result) => res.write(JSON.stringify(result) + "\n"));
+  res.write("\n<SOURCES>\n");
+  //step-7 - also stream back the resources and the follow up questions(which we can get from another parallell llm call)
+  res.write(
+    JSON.stringify(webSearchResult.map((result) => ({ url: result.url }))),
+  );
+  res.write("\n</SOURCES>\n");
 
   //step-8 - close the event stream
 
   res.end();
 });
+
+app.post('/perplexity_ask/follow_up', async(req,res)=> {
+  //Step 1- get the existing chat from the db,
+  //Step 2- Forward the full history to the llm
+  //Step 2.5- TODO: - Do context engineering here
+  //Step 3- Stream the response back to the user
+})
 
 app.listen(3000);

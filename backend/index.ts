@@ -2,22 +2,10 @@ import express, { text } from "express";
 import { tavily } from "@tavily/core";
 import { GoogleGenAI } from "@google/genai";
 import { PROMPT_TEMPLATE, SYSTEM_PROMPT } from "./prompt";
-import z, { string } from "zod";
-import { prisma } from "./db";
 
 const client = tavily({ apiKey: process.env.TAVILY_API_KEY });
 const app = express();
 app.use(express.json());
-
-const res = await prisma.user.create({
-  data:{
-    email:"ishan@gmail.com",
-    name:"Ishan",
-    provider:"GITHUB",
-  }
-});
-
-console.log(res)
 
 //Signup
 app.post('/signup', async(req, res) =>{

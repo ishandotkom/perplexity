@@ -2,8 +2,21 @@ import type { NextFunction, Request, Response } from "express";
 import { createSupabaseClient } from "./client";
 
 const client = createSupabaseClient();
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization;
+export async function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const token = req.headers.authorization;
 
-    client.auth.getUser(token);
+  const data = await client.auth.getUser(token);
+  const userId = data.data.user?.id;
+  if (userId) {
+    req.userId = userId;
+    next();
+  } else{
+    res.status(403).json({
+        error: "Not Authorized"
+    })
+  }
 }

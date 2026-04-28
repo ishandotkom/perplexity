@@ -4,6 +4,6 @@ import { createClient } from '@supabase/supabase-js'
 export function createSupabaseClient() {
     return createClient(
         BUN_PUBLIC_SUPABASE_URL!,
-        BUN_PUBLIC_SUPABASE_SECRET_KEY!
+        process.env.BUN_PUBLIC_SUPABASE_SECRET_KEY!
     )
 }

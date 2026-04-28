@@ -2,6 +2,8 @@ import { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/client";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { BACKEND_URL } from "@/config/config";
+import axios from "axios";
 
 const supabase = createClient();
 
@@ -18,6 +20,22 @@ const Dashboard = () => {
     }
     getInfo();
   }, []);
+
+  useEffect(() => {
+    async function getExistingConversations() {
+      if (user) {
+        const { data: { session } } = await supabase.auth.getSession();
+        const jwt =session?.access_token
+        const response = await axios.get(`${BACKEND_URL}/conversations`,{
+          headers:{
+            Authorization:jwt
+          }
+        })
+        console.log(response.data)
+      }
+    }
+    getExistingConversations()
+  }, [user])
 
   return (
     <div>

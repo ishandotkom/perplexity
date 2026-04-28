@@ -1,34 +1,30 @@
 import express, { text } from "express";
+import cors from "cors";
 import { tavily } from "@tavily/core";
 import { GoogleGenAI } from "@google/genai";
 import { PROMPT_TEMPLATE, SYSTEM_PROMPT } from "./prompt";
+import { authMiddleware } from "./middleware";
 
 const client = tavily({ apiKey: process.env.TAVILY_API_KEY });
 const app = express();
 app.use(express.json());
-
-//Signup
-app.post('/signup', async(req, res) =>{
-
-})
-
-//Signin
-app.post('/signin', async(req, res) =>{
-  
-})
+app.use(cors());
 
 //Past conversation get
-app.post('/conversations', async(req, res)=>{
+app.get('/conversations', authMiddleware, async(req, res)=>{
+  res.json({
+    userId: req.userId,
+  })
 
 })
 
 //Past conversation get
-app.post('/conversation/:conversationId', async(req, res)=>{
+app.get('/conversation/:conversationId', authMiddleware, async(req, res)=>{
 
 })
 
 //Ask
-app.post("/perplexity_ask", async (req, res) => {
+app.post("/perplexity_ask", authMiddleware, async (req, res) => {
   //step-1 - get the query from the user
   const query = req.body.query;
 
@@ -81,11 +77,11 @@ app.post("/perplexity_ask", async (req, res) => {
   res.end();
 });
 
-app.post('/perplexity_ask/follow_up', async(req,res)=> {
+app.post('/perplexity_ask/follow_up', authMiddleware, async(req,res)=> {
   //Step 1- get the existing chat from the db,
   //Step 2- Forward the full history to the llm
   //Step 2.5- TODO: - Do context engineering here
   //Step 3- Stream the response back to the user
 })
 
-app.listen(3000);
+app.listen(3001);

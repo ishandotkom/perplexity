@@ -15,6 +15,7 @@ model User {
   id                  String            @id @default(uuid())
   email               String            @unique
   name                String
+  supabaseId          String
   provider            AuthProvider
   conversations       Conversation[]
 }
@@ -26,6 +27,7 @@ model Conversation {
   userId              String
   user                User              @relation(fields: [userId], references: [id])
   messages            Message[]
+  createdAt           DateTime          @default(now())
 }
 
 model Message {
